@@ -29,7 +29,7 @@ UBOND_PASS=${UBOND_PASS:-$(head -c 32 /dev/urandom | base64 -w0)}
 OPENVPN=${OPENVPN:-yes}
 DSVPN=${DSVPN:-yes}
 WIREGUARD=${WIREGUARD:-yes}
-SOURCES=${SOURCES:-no}
+SOURCES="yes"
 if [ "$UPSTREAM" = "yes" ]; then
 	SOURCES="yes"
 fi
@@ -1550,6 +1550,16 @@ if [ "$update" = "0" ]; then
 	fi
 	systemctl -q restart sshd
 else
+	if [ -x "$(command -v ufw)" ]; then
+		echo "installing firewalld"
+		apt purge ufw
+	fi
+
+	echo "allowing ssh"
+	apt -y install firewalld
+	firewall-cmd --permanent --add-port=65222/tcp
+	firewall-cmd --reload
+	
 	echo '===================================================================================='
 	echo "OpenMPTCProuter Server is now updated to version $OMR_VERSION !"
 	echo 'Keys are not changed, shorewall rules files preserved'
@@ -1636,6 +1646,7 @@ else
 	echo 'done'
 	echo 'Restarting shadowsocks...'
 	systemctl -q restart shadowsocks-libev-manager@manager
+	# try to purge ufw  via apt
 #	if [ $NBCPU -gt 1 ]; then
 #		for i in $NBCPU; do
 #			systemctl restart shadowsocks-libev-server@config$i
@@ -1645,8 +1656,11 @@ else
 	echo 'Restarting shorewall...'
 	systemctl -q restart shorewall
 	systemctl -q restart shorewall6
+
 	echo 'done'
 	echo '===================================================================================='
 	echo '\033[1m  /!\ You need to reboot to use latest MPTCP kernel /!\ \033[0m'
 	echo '===================================================================================='
 fi
+
+
