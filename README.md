@@ -25,3 +25,21 @@ chmod +x arm-ubuntu-install.sh
 ```
 
 This should install and configure the OpenMPTCProuter on your ARM64 VPS, if you encounter any issues please create an issue.
+
+## Compiling your own Kernel
+
+1. Clone the repository
+2. run the following command
+
+```
+docker build -t mptcp-arm64-build . 
+```
+3. docker run -d --rm --name mptcp-arm64-build -v /dir/where/you/want/the/compiled/files/to/be/put:/build mptcp-arm64-build
+
+you can monitor the build progress by running
+
+```
+docker logs -f mptcp-arm64-build
+```
+
+everything should appear in the directory specified earlier when the build is over
