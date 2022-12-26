@@ -1,8 +1,6 @@
 # To install the OpenMPTCProuter on an ARM64 VPS, follow these steps:
 
-Download the necessary .deb files from the release page of the repository.
-
-1. Install all of the .deb files as root. You can do this by running the following command for each .deb file:
+1. Download the necessary .deb files from the release page of the repository.
 2. Install all of the .deb files as root. You can do this by running the following command for each .deb file:
 
 ```
